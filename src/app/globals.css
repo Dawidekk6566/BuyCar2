@@ -6,4 +6,17 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+.mclaren {
+  background-image: url("https://cdn.discordapp.com/attachments/1096527026367758429/1114273876013219890/mclaren.png");
+}
+
+.why-us {
+  background-image: url("https://images.pexels.com/photos/9843580/pexels-photo-9843580.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+}
+
+.about-us {
+  background-image: url("https://images.pexels.com/photos/10854756/pexels-photo-10854756.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
 }
