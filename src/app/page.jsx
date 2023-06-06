@@ -1,7 +1,11 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRef, useState } from "react";
+import Lenis from "@studio-freight/lenis";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 import Suzuki from "public/suzuki.png";
 import Toyota from "public/toyota.png";
 import Mclaren from "public/mclaren.png";
@@ -155,20 +159,83 @@ export default function Home() {
     setNav(!nav);
   };
 
+  const lenis = new Lenis();
+
+  lenis.on("scroll", (e) => {
+    console.log(e);
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
+
+  AOS.init({
+    // Global settings:
+    disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+    startEvent: "DOMContentLoaded", // name of the event dispatched on the document, that AOS should initialize on
+    initClassName: "aos-init", // class applied after initialization
+    animatedClassName: "aos-animate", // class applied on animation
+    useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+    disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+    debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+    throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+
+    // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+    offset: 120, // offset (in px) from the original trigger point
+    delay: 0, // values from 0 to 3000, with step 50ms
+    duration: 400, // values from 0 to 3000, with step 50ms
+    easing: "ease", // default easing for AOS animations
+    once: false, // whether animation should happen only once - while scrolling down
+    mirror: false, // whether elements should animate out while scrolling past them
+    anchorPlacement: "top-bottom", // defines which position of the element regarding to window should trigger the animation
+  });
+
+  const ref = useRef(null);
+  const doClick = () => ref.current?.scrollIntoView({ behavior: "smooth" });
+
+  const ref2 = useRef(null);
+  const doClick2 = () => ref2.current?.scrollIntoView({ behavior: "smooth" });
+
+  const ref3 = useRef(null);
+  const doClick3 = () => ref3.current?.scrollIntoView({ behavior: "smooth" });
+
+  const mainRef = useRef(null);
+  const mainClick = () =>
+    mainRef.current?.scrollIntoView({ behavior: "smooth" });
+
   return (
-    <main className="flex flex-col">
-      <nav className="h-24 bg-[#1A1A1A] text-white flex items-center justify-center px-32 sticky top-0">
+    <main className="flex flex-col overflow-hidden">
+      <nav
+        data-aos="fade-right"
+        data-aos-offset="100"
+        data-aos-delay="10"
+        data-aos-duration="500"
+        data-aos-easing="linear"
+        data-aos-mirror="true"
+        data-aos-once="true"
+        data-aos-anchor-placement="top-center"
+        className="h-28 bg-[#1A1A1A] w-full text-white flex items-center justify-center px-32 sticky"
+      >
         <div className="flex items-center gap-12">
+          <div></div>
           <h1 className="text-3xl hover:cursor-pointer">BuyCar</h1>
           <ul>
             <li className="gap-12 flex items-center max-lg:hidden lg-flex">
-              <p className="hover:cursor-pointer underline-offset-8 underline">
+              <button onClick={mainClick} className="hover:cursor-pointer">
                 Strona główna
-              </p>
-              <p className="hover:cursor-pointer">Kolekcja samochodów</p>
-              <p className="hover:cursor-pointer">Wiadomości</p>
-              <p className="hover:cursor-pointer">Kontakt</p>
-              <p className="hover:cursor-pointer">Opinie</p>
+              </button>
+              <button onClick={doClick} className="hover:cursor-pointer">
+                Dlaczego my?
+              </button>
+              <button onClick={doClick2} className="hover:cursor-pointer">
+                Opinie klientów
+              </button>
+              <button onClick={doClick3} className="hover:cursor-pointer">
+                Kontakt
+              </button>
             </li>
             <div onClick={handleNav} className="block lg:hidden">
               {!nav ? (
@@ -200,11 +267,24 @@ export default function Home() {
           </div>
         </div>
       </nav>
-      <div className="about-us h-full max-md:h-full bg-center bg-cover px-3 flex-col justify-center items-center flex border-b-8 border-sky-100">
-        <h1 className="text-3xl mt-20 text-center font-semibold">
-          Czym jest BuyCar?
-        </h1>
-        <div className="my-12 p-12 max-h-72 w-auto bg-black/90 rounded-xl flex items-center">
+      <div
+        ref={mainRef}
+        data-aos="fade-down"
+        data-aos-offset="150"
+        data-aos-delay="10"
+        data-aos-duration="500"
+        data-aos-easing="linear"
+        data-aos-mirror="true"
+        data-aos-once="true"
+        data-aos-anchor-placement="top-center"
+        className="about-us h-full max-md:h-full bg-center bg-cover px-3 flex-col justify-center items-center flex border-b-8 border-sky-100"
+      >
+        <div className="flex justify-center items-center text-white rounded-xl mt-20 h-24 w-48 bg-black/90">
+          <h1 className="text-3xl text-center font-semibold">
+            Czym jest BuyCar?
+          </h1>
+        </div>
+        <div className="scroll my-12 p-12 max-h-72 w-auto bg-black/90 rounded-xl flex items-center">
           <span className="text-center max-md:text-sm max-lg max-w-lg leading-6 text-white">
             BuyCar to renomowana firma zajmująca się sprzedażą samochodów. Od
             momentu swojego powstania firma zyskała reputację solidnego i
@@ -214,18 +294,29 @@ export default function Home() {
           </span>
         </div>
       </div>
-      <div className="why-us h-full max-md:h-full bg-center bg-cover px-32 text-white flex-col justify-center items-center flex">
+      <div
+        ref={ref}
+        data-aos="fade-left"
+        data-aos-offset="200"
+        data-aos-delay="10"
+        data-aos-duration="500"
+        data-aos-easing="linear"
+        data-aos-mirror="true"
+        data-aos-once="true"
+        data-aos-anchor-placement="top-center"
+        className="div1 why-us h-full max-md:h-full bg-center bg-cover px-32 text-white flex-col justify-center items-center flex"
+      >
         <h2 className="text-3xl mt-16 font-medium text-center">
           Dlaczego warto kupić samochód w BuyCar?
         </h2>
         <div className="flex justify-evenly w-full max-md:flex-col items-center my-20 gap-8">
-          <div className="flex-col flex justify-center items-center px-4 py-4 h-48 w-68 bg-black/80 rounded-xl">
+          <div className="flex-col max-md:w-72 flex justify-center items-center p-8 h-48 bg-black/80 rounded-xl">
             <SiCashapp font-size="32"></SiCashapp>
             <p className="text-xl max-lg:text-base text-center mt-4">
               Szeroki wybór wysokiej jakości samochodów w przystępnych cenach
             </p>
           </div>
-          <div className="flex-col flex items-center justify-center max-md:mt-8 px-4 py-4 h-48 w-68 bg-black/80 rounded-xl">
+          <div className="flex-col max-sm:w-72 flex justify-center items-center p-8 h-48 bg-black/80 rounded-xl">
             <FaHandshake font-size="32"></FaHandshake>
             <p className="text-xl max-lg:text-base text-center mt-4">
               Fachowa pomoc w wyborze samochodu dopasowanego do Twoich potrzeb i
@@ -234,11 +325,22 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <section className=" px-32 flex justify-center h-full mb-20">
+      <section
+        ref={ref2}
+        data-aos="fade-down"
+        data-aos-offset="100"
+        data-aos-delay="100"
+        data-aos-duration="500"
+        data-aos-easing="linear"
+        data-aos-mirror="true"
+        data-aos-once="true"
+        data-aos-anchor-placement="top-center"
+        className=" px-16 flex justify-center h-full mb-20"
+      >
         <div className="mt-20">
           <h2 className="text-4xl text-center">Opinia klientów</h2>
-          <div className="flex gap-4 mt-4 max-xl:flex-col">
-            <div className="w-96 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
+          <div className="flex max-md:items-center gap-4 mt-4 max-xl:flex-col">
+            <div className="w-96 max-md:w-72 max-md:h-52 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
               <span className="text-sm text-white">
                 Jestem bardzo zadowolony z usług BuyCar. Ich zespół ekspertów
                 pomógł mi wybrać samochód, który odpowiada moim potrzebom i
@@ -247,7 +349,7 @@ export default function Home() {
               </span>
               <p className="text-white font-semibold">Wulan Sari</p>
             </div>
-            <div className="w-96 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
+            <div className="w-96 h-48 max-md:w-72 max-md:h-52 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
               <span className="text-sm text-white">
                 BuyCar udowodnił, że kupowanie samochodu przez Internet może być
                 bardzo łatwe i przyjemne. Jestem bardzo zadowolony z zakupionego
@@ -255,7 +357,7 @@ export default function Home() {
               </span>
               <p className="text-white font-semibold">Agus Santoso</p>
             </div>
-            <div className="w-96 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
+            <div className="w-96 h-48 max-md:w-72 max-md:h-52 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
               <span className="text-sm text-white">
                 BuyCar zapewnia wyjątkową obsługę. Byli bardzo responsywni i
                 pomagali mi na każdym etapie zakupu. Dokonując z nimi transakcji
@@ -265,7 +367,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex gap-4 mt-4 max-xl:flex-col">
-            <div className="w-96 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
+            <div className="w-96 h-48 max-md:w-72 max-md:h-52 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
               <span className="text-sm text-white">
                 Jestem bardzo zadowolony z samochodu, który kupiłem od BuyCar.
                 Samochód jest w doskonałym stanie i bardzo przystępnej cenie.
@@ -273,7 +375,7 @@ export default function Home() {
               </span>
               <p className="text-white font-semibold">Budi Cahyono</p>
             </div>
-            <div className="w-96 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
+            <div className="w-96 h-48 max-md:w-72 max-md:h-52 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
               <span className="text-sm text-white">
                 Kupiłem samochód od BuyCar i jestem bardzo zadowolony z zakupów.
                 Zakupiony przeze mnie samochód był w bardzo dobrym stanie i
@@ -281,7 +383,7 @@ export default function Home() {
               </span>
               <p className="text-white font-semibold">Iwan Pranata</p>
             </div>
-            <div className="w-96 h-48 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
+            <div className="w-96 h-48 max-md:w-72 max-md:h-52 bg-[#333333] p-6 rounded-xl flex flex-col justify-between">
               <span className="text-sm text-white">
                 Jestem bardzo zadowolony z zakupu samochodu w BuyCar. Zapewniają
                 wybór wysokiej jakości i niedrogich samochodów, a także
@@ -293,7 +395,10 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="mclaren h-56 max-lg:h-72 max-sm:h-96 flex items-center bg-center bg-cover">
+      <section
+        ref={ref3}
+        className="mclaren justify-center h-56 max-lg:h-72 max-sm:h-96 flex items-center bg-center bg-cover"
+      >
         <div className="my-20 mx-28 flex w-full justify-between max-lg:flex-col items-center">
           <h3 className="text-white text-xl max-md:text-xl m-2 max-lg:text-center">
             Kup teraz swój wymarzony samochód w BuyCar i ciesz się łatwym i
@@ -304,8 +409,8 @@ export default function Home() {
           </button>
         </div>
       </section>
-      <footer className="h-full w-full bg-[#1A1A1A] text-white ">
-        <div className="flex items-center justify-between max-md:flex-col max-md:mb-8">
+      <footer className="h-full w-full bg-[#1A1A1A] text-white flex justify-center">
+        <div className="flex items-center max-md:flex-col max-md:mb-8">
           <div className="mx-28 mt-6 mb-8">
             <p>© 2023 BuyCar 2</p>
           </div>
@@ -317,6 +422,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+      <script>AOS.init();</script>
     </main>
   );
 }
