@@ -215,6 +215,9 @@ export default function Home() {
   const mainClick = () =>
     mainRef.current?.scrollIntoView({ behavior: "smooth" });
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
   return (
     <main className="flex flex-col overflow-hidden">
       <nav
@@ -432,9 +435,6 @@ export default function Home() {
         </div>
       </footer>
       <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-      <script>
-        
-      </script>
     </main>
   );
 }
