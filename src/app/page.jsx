@@ -159,18 +159,27 @@ export default function Home() {
     setNav(!nav);
   };
 
-  const lenis = new Lenis();
+  useEffect(() => {
+    const lenis = new Lenis();
 
-  lenis.on("scroll", (e) => {
-    console.log(e);
-  });
+    const handleScroll = (e) => {
+      console.log(e);
+    };
 
-  function raf(time) {
-    lenis.raf(time);
+    lenis.on("scroll", handleScroll);
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
     requestAnimationFrame(raf);
-  }
 
-  requestAnimationFrame(raf);
+    return () => {
+      lenis.off("scroll", handleScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   AOS.init({
     // Global settings:
@@ -423,7 +432,9 @@ export default function Home() {
         </div>
       </footer>
       <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-      <script>AOS.init();</script>
+      <script>
+        
+      </script>
     </main>
   );
 }
