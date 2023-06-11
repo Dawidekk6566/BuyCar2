@@ -217,7 +217,7 @@ export default function Home() {
 
   useEffect(() => {
     AOS.init();
-  }, []);
+  });
   return (
     <main className="flex flex-col overflow-hidden">
       <nav
